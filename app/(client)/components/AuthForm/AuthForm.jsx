@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -9,28 +9,25 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 
-
 const defaultTheme = createTheme();
 
+const AuthForm = ({ title, fields, signup }) => {
+  const [formError, setFormError] = useState("");
 
-const AuthForm = ({ title,fields, signup }) => {
-   
-    const [formError, setFormError] = useState("");
-    
   const router = useRouter();
-  
-    
-    const handleSubmit = async (event) => {
-      event.preventDefault();
-      try {
-        const data = new FormData(event.currentTarget);
-        let response;
-       if (signup) {
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    try {
+      const data = new FormData(event.currentTarget);
+      let response;
+      if (signup) {
         const signupResponse = await fetch(
           "http://localhost:3000/api/register",
           {
@@ -47,34 +44,27 @@ const AuthForm = ({ title,fields, signup }) => {
         );
         response = await signupResponse.json();
         if (!signupResponse.ok) {
-          
           setFormError(response.message);
-          return; 
-        }
-          } 
-          
-
-       const signinResponse = await signIn("credentials", {
-          username: signup?response.username:data.get("username"),
-          password: data.get("password"),
-          redirect: false,
-       });
-        if (signinResponse?.error) {
-          setFormError(signinResponse.error);
           return;
         }
-        if (signinResponse?.ok) {
-          return router.push("/dashboard");
-         }
-       
-         
-        
-          
-          
-      } catch (error) {
-        console.log(error);
       }
-    };
+
+      const signinResponse = await signIn("credentials", {
+        username: signup ? response.username : data.get("username"),
+        password: data.get("password"),
+        redirect: false,
+      });
+      if (signinResponse?.error) {
+        setFormError(signinResponse.error);
+        return;
+      }
+      if (signinResponse?.ok) {
+        return router.push("/dashboard");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -125,6 +115,19 @@ const AuthForm = ({ title,fields, signup }) => {
             >
               {title}
             </Button>
+            <Grid container>
+              <Grid item>
+                <Link
+                  href="#"
+                  onClick={() => router.push(signup ? "/login" : "/register")}
+                  variant="body2"
+                >
+                  {signup
+                    ? "Already have an account? Sign in"
+                    : "Don't have an account? Sign Up"}
+                </Link>
+              </Grid>
+            </Grid>
           </Box>
         </Box>
       </Container>
