@@ -1,66 +1,80 @@
-"use client";
+"use client"
 
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { signIn } from "next-auth/react";
 
-const fields = [
-  {
-    id: "username",
-    label: "Username",
-    name: "username",
-    autoComplete: "username",
-  },
-  {
-    id: "email",
-    label: "Email Address",
-    name: "email",
-    autoComplete: "email",
-  },
-  {
-    id: "password",
-    label: "Password",
-    name: "password",
-    type: "password",
-    autoComplete: "new-password",
-  },
-];
 
 const defaultTheme = createTheme();
 
-export default function Register() {
-  const [formError, setFormError] = useState("");
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const data = new FormData(event.currentTarget);
-      const response = await fetch("http://localhost:3000/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: data.get("username"),
-          email: data.get("email"),
+const AuthForm = ({ title,fields, signup }) => {
+   
+    const [formError, setFormError] = useState("");
+    
+  const router = useRouter();
+  
+    
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+      try {
+        const data = new FormData(event.currentTarget);
+        let response;
+       if (signup) {
+        const signupResponse = await fetch(
+          "http://localhost:3000/api/register",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              username: data.get("username"),
+              email: data.get("email"),
+              password: data.get("password"),
+            }),
+          }
+        );
+        response = await signupResponse.json();
+        if (!signupResponse.ok) {
+          
+          setFormError(response.message);
+          return; 
+        }
+          } 
+          
+
+       const signinResponse = await signIn("credentials", {
+          username: signup?response.username:data.get("username"),
           password: data.get("password"),
-        }),
-      });
-      const res = await response.json();
-      setFormError(res.message);
-    } catch (error) {
-      console.log(error);
-    }
-  };
+          redirect: false,
+       });
+        if (signinResponse?.error) {
+          setFormError(signinResponse.error);
+          return;
+        }
+        if (signinResponse?.ok) {
+          return router.push("/dashboard");
+         }
+       
+         
+        
+          
+          
+      } catch (error) {
+        console.log(error);
+      }
+    };
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -78,9 +92,9 @@ export default function Register() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign up
+            {title}
           </Typography>
-          {formError && <Typography>{formError}</Typography>}
+          <Typography>{formError}</Typography>
           <Box
             component="form"
             noValidate
@@ -109,18 +123,13 @@ export default function Register() {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Sign Up
+              {title}
             </Button>
-            <Grid container justifyContent="flex-end">
-              <Grid item>
-                <Link href="#" variant="body2">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
           </Box>
         </Box>
       </Container>
     </ThemeProvider>
   );
-}
+};
+
+export default AuthForm;
