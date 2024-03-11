@@ -11,60 +11,15 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+
+import { useAuth } from "./hooks/useAuth";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { signIn } from "next-auth/react";
 
 const defaultTheme = createTheme();
 
 const AuthForm = ({ title, fields, signup }) => {
-  const [formError, setFormError] = useState("");
-
   const router = useRouter();
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    try {
-      const data = new FormData(event.currentTarget);
-      let response;
-      if (signup) {
-        const signupResponse = await fetch(
-          "http://localhost:3000/api/register",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              username: data.get("username"),
-              email: data.get("email"),
-              password: data.get("password"),
-            }),
-          }
-        );
-        response = await signupResponse.json();
-        if (!signupResponse.ok) {
-          setFormError(response.message);
-          return;
-        }
-      }
-
-      const signinResponse = await signIn("credentials", {
-        username: signup ? response.username : data.get("username"),
-        password: data.get("password"),
-        redirect: false,
-      });
-      if (signinResponse?.error) {
-        setFormError(signinResponse.error);
-        return;
-      }
-      if (signinResponse?.ok) {
-        return router.push("/dashboard");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const { formError,setFormError, authSubmit } = useAuth(signup);
 
   return (
     <ThemeProvider theme={defaultTheme}>
@@ -85,12 +40,7 @@ const AuthForm = ({ title, fields, signup }) => {
             {title}
           </Typography>
           <Typography>{formError}</Typography>
-          <Box
-            component="form"
-            noValidate
-            onSubmit={handleSubmit}
-            sx={{ mt: 3 }}
-          >
+          <Box component="form" noValidate onSubmit={authSubmit} sx={{ mt: 3 }}>
             <Grid container spacing={2}>
               {fields.map((field) => (
                 <Grid item xs={12} key={field.id}>

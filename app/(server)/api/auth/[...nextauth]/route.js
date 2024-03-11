@@ -1,8 +1,8 @@
 import connectDB from "@/libs/db";
-import bcrypt from "bcrypt"
+import bcrypt from "bcrypt";
 import User from "@/models/user.model";
-import NextAuth from "next-auth"
-import CredentialsProvider from "next-auth/providers/credentials"
+import NextAuth from "next-auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 
 const handler = NextAuth({
   providers: [
@@ -13,36 +13,48 @@ const handler = NextAuth({
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
-        await connectDB()
+        await connectDB();
 
-        const userFound = await User.findOne({ username: credentials?.username })
-        const passwordMatch = await bcrypt.compare(credentials.password, userFound.password)
+        const userFound = await User.findOne({
+          username: credentials?.username,
+        })
         
-        if (!userFound || !passwordMatch) {
-          console.log("Invalid Credentials")
-          return new Error( "Invalid Credentials" )
+        if (!userFound) {
+          throw new Error("Invalid credentials")
+        
+        }
+        
+        const passwordMatch = await bcrypt.compare(
+          credentials.password,
+          userFound.password
+        );
+
+        if (!passwordMatch) {
+          throw new Error("Invalid credentials");
+          
         }
 
         return userFound
+
+        
       },
     }),
   ],
   callbacks: {
-    jwt({token,user}) {
+    jwt({ token, user }) {
       if (user) {
         token.user = user;
       }
-      return token
+      return token;
     },
     session({ session, token }) {
-      session.user=token.user
-      return session
-    }
+      session.user = token.user;
+      return session;
+    },
   },
   pages: {
     signIn: "/login",
-  }
-  
+  },
 });
 
-export {handler as GET, handler as POST}
+export { handler as GET, handler as POST };
