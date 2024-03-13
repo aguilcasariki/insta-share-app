@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { useTableContext } from "../context/TableContext";
+import { GridRowModes } from "@mui/x-data-grid";
 
 const useRowEditing = () => {
   const { rows, setRows, rowModesModel, setRowModesModel } = useTableContext();
