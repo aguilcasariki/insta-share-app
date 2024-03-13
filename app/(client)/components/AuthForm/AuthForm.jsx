@@ -1,5 +1,4 @@
 "use client";
-
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -11,7 +10,6 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
 import { useAuth } from "./hooks/useAuth";
 import { useRouter } from "next/navigation";
 
@@ -19,7 +17,7 @@ const defaultTheme = createTheme();
 
 const AuthForm = ({ title, fields, signup }) => {
   const router = useRouter();
-  const { formError,setFormError, authSubmit } = useAuth(signup);
+  const { formError, setFormError, authSubmit } = useAuth(signup);
 
   return (
     <ThemeProvider theme={defaultTheme}>

@@ -1,0 +1,33 @@
+/* Block */
+.userWorkspace {
+  height: 500px;
+  padding: 1rem 2rem 0 2rem;
+}
+
+/* Element */
+.userWorkspace__actions {
+  color: var(--text-secondary);
+}
+
+.userWorkspace__textPrimary {
+  color: var(--text-primary);
+}
+
+/* Modifier */
+.userWorkspace--noRows {
+  background-color: #f5f5f5;
+}
+
+/* Element for the DataGrid */
+.userWorkspace__dataGrid {
+  background: white;
+  --DataGrid-overlayHeight: 300px;
+}
+
+/* Element for the noRowsOverlay */
+.userWorkspace__noRowsOverlay {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+}
