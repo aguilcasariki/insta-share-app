@@ -1,9 +1,12 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useTableContext } from "../context/TableContext";
 import { GridRowModes } from "@mui/x-data-grid";
+import { saveFiles } from "../services/saveFiles";
 
-const useRowEditing = () => {
+const useRowEditing = (user) => {
   const { rows, setRows, rowModesModel, setRowModesModel } = useTableContext();
+  const [rowName, setRowName] = useState("");
+
   const handleRowEditStop = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
       event.defaultMuiPrevented = true;
@@ -12,12 +15,16 @@ const useRowEditing = () => {
 
   const handleEditClick = useCallback(
     (id) => () => {
+      const rowToEdit = rows.find((row) => row.id === id);
+
+      setRowName(rowToEdit.name);
+
       setRowModesModel({
         ...rowModesModel,
         [id]: { mode: GridRowModes.Edit },
       });
     },
-    [setRowModesModel, rowModesModel]
+    [setRowModesModel, rowModesModel, setRowName, rows]
   );
 
   const handleSaveClick = useCallback(
@@ -45,7 +52,15 @@ const useRowEditing = () => {
     [setRowModesModel, rowModesModel, rows, setRows]
   );
 
-  const processRowUpdate = async (newRow) => {
+  const processRowUpdate = (newRow) => {
+    saveFiles(
+      `${process.env.NEXT_PUBLIC_FILES_API_URL}/rename/${user}`,
+      {
+        oldName: rowName,
+        newName: newRow.name,
+      },
+      true
+    );
     const updatedRow = { ...newRow };
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
 

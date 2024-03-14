@@ -23,7 +23,7 @@ export default function UserWorkspace({ user }) {
     handleCancelClick,
     processRowUpdate,
     handleRowModesModelChange,
-  } = useRowEditing();
+  } = useRowEditing(user);
   const { handleSaveToServerClick } = useUploadToServer({ user });
 
   const columns = useMemo(
