@@ -33,7 +33,8 @@ export default function UserWorkspace({ user }) {
         handleSaveClick,
         handleCancelClick,
         handleSaveToServerClick,
-        rowModesModel
+        rowModesModel,
+        rows
       ),
     [
       handleEditClick,
@@ -41,6 +42,7 @@ export default function UserWorkspace({ user }) {
       handleCancelClick,
       handleSaveToServerClick,
       rowModesModel,
+      rows,
     ]
   );
 

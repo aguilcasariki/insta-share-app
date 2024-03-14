@@ -10,7 +10,8 @@ export const columnSchema = (
   handleSaveClick,
   handleCancelClick,
   handleUploadClick,
-  rowModesModel
+  rowModesModel,
+  rows
 ) => [
   { field: "name", headerName: "Name", flex: 0.1, editable: true },
   {
@@ -26,6 +27,8 @@ export const columnSchema = (
     cellClassName: "actions",
     getActions: ({ id }) => {
       const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
+
+      const selectedRow = rows.filter((row) => row.id === id);
 
       if (isInEditMode) {
         return [
@@ -57,6 +60,7 @@ export const columnSchema = (
           color="inherit"
         />,
         <GridActionsCellItem
+          disabled={selectedRow[0].status === "Uploaded"}
           key="upload"
           icon={<UploadFile />}
           label="Upload"
