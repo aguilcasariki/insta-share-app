@@ -21,7 +21,7 @@ export default function InputFileUpload({ onFilesUploaded }) {
     const fileInfo = Array.from(files).map((file) => ({
       file,
       name: file.name,
-      size: file.size,
+      size: `${Math.round(file.size / (1024 * 1024))} mb`,
     }));
     onFilesUploaded(fileInfo);
   };

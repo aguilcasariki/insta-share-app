@@ -13,7 +13,10 @@ export const columnSchema = (
   rowModesModel
 ) => [
   { field: "name", headerName: "Name", flex: 0.1, editable: true },
-  { field: "status", headerName: "Status" },
+  {
+    field: "status",
+    headerName: "Status",
+  },
   { field: "size", headerName: "Size" },
   {
     field: "actions",
