@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import Box from "@mui/material/Box";
 
 import { DataGrid } from "@mui/x-data-grid";
@@ -8,13 +8,12 @@ import InputFileUpload from "../InputFileUpload/InputFileUpload";
 import { useTableContext } from "../../context/TableContext";
 import { useFileUpload } from "../../hooks/useFileUpload";
 import useRowEditing from "../../hooks/useRowEditing";
-import { saveFiles } from "../../services/saveFiles";
 import { columnSchema } from "../../schemas/columnSchema";
 import styles from "./UserWorkspace.module.css";
+import useUploadToServer from "../../hooks/useUploadToServer";
 
 export default function UserWorkspace({ user }) {
   const { rows, setRows, rowModesModel, setRowModesModel } = useTableContext();
-
   const { handleFilesUploaded } = useFileUpload();
 
   const {
@@ -25,22 +24,7 @@ export default function UserWorkspace({ user }) {
     processRowUpdate,
     handleRowModesModelChange,
   } = useRowEditing();
-
-  const handleUploadClick = useCallback(
-    (id) => {
-      const row = rows.filter((row) => row.id === id);
-
-      const file = row[0].file;
-
-      const formData = new FormData();
-      formData.append("myFiles", file);
-      saveFiles(
-        `${process.env.NEXT_PUBLIC_FILES_API_URL}/upload/${user}`,
-        formData
-      );
-    },
-    [rows, user]
-  );
+  const { handleSaveToServerClick } = useUploadToServer({ user });
 
   const columns = useMemo(
     () =>
@@ -48,14 +32,14 @@ export default function UserWorkspace({ user }) {
         handleEditClick,
         handleSaveClick,
         handleCancelClick,
-        handleUploadClick,
+        handleSaveToServerClick,
         rowModesModel
       ),
     [
       handleEditClick,
       handleSaveClick,
       handleCancelClick,
-      handleUploadClick,
+      handleSaveToServerClick,
       rowModesModel,
     ]
   );
