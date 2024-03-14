@@ -16,8 +16,8 @@ const useRowEditing = (user) => {
   const handleEditClick = useCallback(
     (id) => () => {
       const rowToEdit = rows.find((row) => row.id === id);
-
-      setRowName(rowToEdit.name);
+      const { name, extension } = rowToEdit;
+      setRowName(`${name}${extension}`);
 
       setRowModesModel({
         ...rowModesModel,
@@ -53,11 +53,12 @@ const useRowEditing = (user) => {
   );
 
   const processRowUpdate = (newRow) => {
+    const { name, extension } = newRow;
     saveFiles(
       `${process.env.NEXT_PUBLIC_FILES_API_URL}/rename/${user}`,
       {
         oldName: rowName,
-        newName: newRow.name,
+        newName: `${name}${extension}`,
       },
       true
     );

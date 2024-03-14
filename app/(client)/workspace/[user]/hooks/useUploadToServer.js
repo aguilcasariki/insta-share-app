@@ -21,10 +21,11 @@ const useUploadToServer = ({ user }) => {
 
       const file = row.file;
       updateRowStatus(id, "Uploading...");
+
+      const rowFullName = `${row.name}${row.extension}`;
       const formData = new FormData();
       formData.append("myFiles", file);
-      console.log("file in client", file);
-      formData.append("fileName", row.name);
+      formData.append("fileName", rowFullName);
 
       const saveFileResponse = await saveFiles(
         `${process.env.NEXT_PUBLIC_FILES_API_URL}/upload/${user}`,

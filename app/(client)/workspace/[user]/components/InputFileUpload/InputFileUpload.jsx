@@ -18,11 +18,17 @@ export default function InputFileUpload({ onFilesUploaded }) {
   const handleFileUpload = (event) => {
     const files = event.target.files;
 
-    const fileInfo = Array.from(files).map((file) => ({
-      file,
-      name: file.name,
-      size: `${Math.round(file.size / (1024 * 1024))} mb`,
-    }));
+    const fileInfo = Array.from(files).map((file) => {
+      const [fileName, fileExtension] = file.name
+        .match(/^(.*?)(\.[^.]*)?$/)
+        .slice(1);
+      return {
+        file,
+        name: fileName,
+        extension: fileExtension,
+        size: `${Math.round(file.size / (1024 * 1024))} mb`,
+      };
+    });
     onFilesUploaded(fileInfo);
   };
   return (

@@ -14,6 +14,7 @@ import useUploadToServer from "../../hooks/useUploadToServer";
 
 export default function UserWorkspace({ user }) {
   const { rows, setRows, rowModesModel, setRowModesModel } = useTableContext();
+  console.log(rows);
   const { handleFilesUploaded } = useFileUpload();
 
   const {

@@ -14,6 +14,7 @@ export const columnSchema = (
   rows
 ) => [
   { field: "name", headerName: "Name", flex: 0.1, editable: true },
+  { field: "extension", headerName: "Extension" },
   {
     field: "status",
     headerName: "Status",
@@ -28,7 +29,8 @@ export const columnSchema = (
     getActions: ({ id }) => {
       const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
 
-      const selectedRow = rows.filter((row) => row.id === id);
+      const isUploadedRow =
+        rows.filter((row) => row.id === id)[0].status === "Uploaded";
 
       if (isInEditMode) {
         return [
@@ -52,6 +54,7 @@ export const columnSchema = (
 
       return [
         <GridActionsCellItem
+          disabled={!isUploadedRow}
           key="edit"
           icon={<EditIcon />}
           label="Edit"
@@ -60,7 +63,7 @@ export const columnSchema = (
           color="inherit"
         />,
         <GridActionsCellItem
-          disabled={selectedRow[0].status === "Uploaded"}
+          disabled={isUploadedRow}
           key="upload"
           icon={<UploadFile />}
           label="Upload"
