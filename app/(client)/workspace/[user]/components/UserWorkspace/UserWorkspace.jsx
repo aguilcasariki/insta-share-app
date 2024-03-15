@@ -1,5 +1,5 @@
 "use client";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import Box from "@mui/material/Box";
 
 import { DataGrid } from "@mui/x-data-grid";
@@ -12,9 +12,18 @@ import { columnSchema } from "../../schemas/columnSchema";
 import styles from "./UserWorkspace.module.css";
 import useUploadToServer from "../../hooks/useUploadToServer";
 
-export default function UserWorkspace({ user }) {
+export default function UserWorkspace({ user, filesData }) {
   const { rows, setRows, rowModesModel, setRowModesModel } = useTableContext();
-  console.log(rows);
+  useEffect(() => {
+    const updatedFilesData = filesData.map((file) => ({
+      ...file,
+      id: file.name,
+    }));
+
+    setRows(updatedFilesData);
+  }, [filesData, setRows]);
+
+  console.log("rows", rows, "filesData", filesData);
   const { handleFilesUploaded } = useFileUpload();
 
   const {
