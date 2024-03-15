@@ -39,6 +39,7 @@ export default function InputFileUpload({ onFilesUploaded }) {
       tabIndex={-1}
       startIcon={<CloudUploadIcon />}
     >
+      Upload
       <VisuallyHiddenInput
         type="file"
         multiple
