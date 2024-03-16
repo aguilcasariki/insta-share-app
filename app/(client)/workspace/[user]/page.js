@@ -1,6 +1,4 @@
-import React from "react";
 import UserWorkspace from "./components/UserWorkspace/UserWorkspace";
-
 import fetchServerData from "../../services/fetchServerData";
 import { TableProvider } from "./context/TableContext";
 

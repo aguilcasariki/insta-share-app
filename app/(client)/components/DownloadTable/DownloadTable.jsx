@@ -13,7 +13,7 @@ import {
 
 import { downloadFile } from "../../services/downloadFile";
 import { CloudDownload } from "@mui/icons-material";
-const columns = ["Name", "Size", "Action"];
+const columns = ["File", "Size", "Action"];
 
 function ListComponent({ filesData }) {
   const handleDownload = async (fileInfo) => {
@@ -25,17 +25,19 @@ function ListComponent({ filesData }) {
         <TableHead>
           <TableRow>
             {columns.map((column) => (
-              <TableCell key={column}>{column}</TableCell>
+              <TableCell key={column} align="center">
+                {column}
+              </TableCell>
             ))}
           </TableRow>
         </TableHead>
         <TableBody>
           {filesData.map((file, index) => (
             <TableRow key={index}>
-              <TableCell>{file.name + file.extension}</TableCell>
+              <TableCell align="center">{file.name + file.extension}</TableCell>
 
-              <TableCell>{file.size}</TableCell>
-              <TableCell>
+              <TableCell align="center">{file.size}</TableCell>
+              <TableCell align="center">
                 <Button
                   variant="contained"
                   color="primary"
