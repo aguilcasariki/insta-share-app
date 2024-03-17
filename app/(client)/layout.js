@@ -1,8 +1,5 @@
-
 import Providers from "./Providers";
 import "./globals.css";
-
-
 
 export const metadata = {
   title: "Create Next App",
