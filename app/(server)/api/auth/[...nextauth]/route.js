@@ -17,13 +17,12 @@ const handler = NextAuth({
 
         const userFound = await User.findOne({
           username: credentials?.username,
-        })
-        
+        });
+
         if (!userFound) {
-          throw new Error("Invalid credentials")
-        
+          throw new Error("Invalid credentials");
         }
-        
+
         const passwordMatch = await bcrypt.compare(
           credentials.password,
           userFound.password
@@ -31,12 +30,9 @@ const handler = NextAuth({
 
         if (!passwordMatch) {
           throw new Error("Invalid credentials");
-          
         }
 
-        return userFound
-
-        
+        return userFound;
       },
     }),
   ],

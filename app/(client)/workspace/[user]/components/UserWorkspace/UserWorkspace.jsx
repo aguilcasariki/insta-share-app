@@ -11,8 +11,11 @@ import useRowEditing from "../../hooks/useRowEditing";
 import { columnSchema } from "../../schemas/columnSchema";
 import styles from "./UserWorkspace.module.css";
 import useUploadToServer from "../../hooks/useUploadToServer";
+import { useSession } from "next-auth/react";
 
 export default function UserWorkspace({ user, filesData }) {
+  const { status, data } = useSession();
+
   const { rows, setRows, rowModesModel, setRowModesModel } = useTableContext();
   useEffect(() => {
     const updatedFilesData = filesData.map((file) => ({
@@ -23,7 +26,6 @@ export default function UserWorkspace({ user, filesData }) {
     setRows(updatedFilesData);
   }, [filesData, setRows]);
 
-  console.log("rows", rows, "filesData", filesData);
   const { handleFilesUploaded } = useFileUpload();
 
   const {
@@ -55,6 +57,9 @@ export default function UserWorkspace({ user, filesData }) {
       rows,
     ]
   );
+  // if (data?.user._id !== user) {
+  //   return <h1>Esta no es su session</h1>;
+  // }
 
   return (
     <Box className={styles.userWorkspace}>
