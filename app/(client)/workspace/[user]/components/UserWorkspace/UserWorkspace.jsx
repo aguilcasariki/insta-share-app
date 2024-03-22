@@ -14,7 +14,7 @@ import useUploadToServer from "../../hooks/useUploadToServer";
 import { useSession } from "next-auth/react";
 
 export default function UserWorkspace({ user, filesData }) {
-  const { status, data } = useSession();
+  const { data } = useSession();
 
   const { rows, setRows, rowModesModel, setRowModesModel } = useTableContext();
   useEffect(() => {

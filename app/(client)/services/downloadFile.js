@@ -16,7 +16,7 @@ export const downloadFile = async (fileInfo) => {
     a.style.display = "none";
     a.href = url;
 
-    const fileName = fileInfo.name + fileInfo.extension || "download";
+    const fileName = fileInfo.name || "download";
     a.download = fileName;
 
     document.body.appendChild(a);

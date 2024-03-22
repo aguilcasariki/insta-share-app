@@ -13,23 +13,20 @@ import {
 
 import { downloadFile } from "../../services/downloadFile";
 import { CloudDownload } from "@mui/icons-material";
-import { useEffect } from "react";
-const columns = ["File", "Size", "Action"];
+import { useEffect, useState } from "react";
+const columns = ["File", "Action"];
 
 function ListComponent({ filesData }) {
+  const [data, setData] = useState(filesData);
   useEffect(() => {
     const source = new EventSource("http://localhost:5000/api/compress");
     source.onmessage = function (event) {
-      const data = JSON.parse(event.data);
-      console.log("Compresión completada:", data);
+      const compressFilesData = JSON.parse(event.data);
+      console.log("Compresión completada:", compressFilesData);
+      setData((prev) => [...prev, compressFilesData]);
+
       // Aquí puedes manejar los datos recibidos, por ejemplo, mostrar un mensaje
     };
-
-    source.addEventListener("oncompressionComplete", function (event) {
-      const data = JSON.parse(event.data);
-      console.log("Compresión completada:", data);
-      // Aquí puedes manejar los datos recibidos, por ejemplo, mostrar un mensaje
-    });
 
     source.onerror = function (error) {
       console.error("Error al conectar con el servidor:", error);
@@ -40,6 +37,7 @@ function ListComponent({ filesData }) {
       source.close();
     };
   }, []);
+
   const handleDownload = async (fileInfo) => {
     await downloadFile(fileInfo);
   };
@@ -56,11 +54,10 @@ function ListComponent({ filesData }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {filesData.map((file, index) => (
+          {data.map((file, index) => (
             <TableRow key={index}>
-              <TableCell align="center">{file.name + file.extension}</TableCell>
+              <TableCell align="center">{file.name}</TableCell>
 
-              <TableCell align="center">{file.size}</TableCell>
               <TableCell align="center">
                 <Button
                   variant="contained"
